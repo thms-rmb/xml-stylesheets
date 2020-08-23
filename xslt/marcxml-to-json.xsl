@@ -5,6 +5,12 @@
 		version="3.0">
   <xsl:output method="json" />
 
+  <!--
+      Transforms MARCXML into a JSON representation according to the
+      proposal outlined in
+      https://github.com/marc4j/marc4j/wiki/MARC-in-JSON-Description
+  -->
+
   <xsl:template match="marc:collection">
     <xsl:variable name="records" as="map(*)*">
       <xsl:apply-templates select="marc:record" />
@@ -27,15 +33,8 @@
     <xsl:sequence select="map { @tag: text() }" />
   </xsl:template>
 
-  <xsl:template match="marc:datafield">
-    <xsl:variable name="subfields"
-		  select="array {
-                            for $s in marc:subfield
-                            return map { $s/@code: $s/text() } }" />
-    <xsl:sequence select="map {
-                            @tag: map {
-                              'subfields': $subfields,
-                              'ind1': string(@ind1), 
-                              'ind2': string(@ind2) } }" />
-  </xsl:template>
-</xsl:stylesheet>
+  <xsl:template match="marc:datafield"> <xsl:variable name="subfields"
+  select="array { for $s in marc:subfield return map { $s/@code:
+  $s/text() } }" /> <xsl:sequence select="map { @tag: map {
+  'subfields': $subfields, 'ind1': string(@ind1), 'ind2':
+  string(@ind2) } }" /> </xsl:template> </xsl:stylesheet>
