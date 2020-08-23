@@ -25,8 +25,8 @@
     </xsl:variable>
 
     <xsl:sequence select="map {
-                          'leader': marc:leader => string() => normalize-space(),
-                          'fields': array { $fields } }" />
+			    'leader': marc:leader => string() => normalize-space(),
+			    'fields': array { $fields } }" />
   </xsl:template>
 
   <xsl:template match="marc:controlfield">
