@@ -25,16 +25,26 @@
     </xsl:variable>
 
     <xsl:sequence select="map {
-                            'leader': marc:leader/text(),
-                            'fields': array { $fields } }" />
+                          'leader': marc:leader => string() => normalize-space(),
+                          'fields': array { $fields } }" />
   </xsl:template>
 
   <xsl:template match="marc:controlfield">
-    <xsl:sequence select="map { @tag: text() }" />
+    <xsl:sequence select="map {
+			    @tag: string() => normalize-space() }" />
   </xsl:template>
 
-  <xsl:template match="marc:datafield"> <xsl:variable name="subfields"
-  select="array { for $s in marc:subfield return map { $s/@code:
-  $s/text() } }" /> <xsl:sequence select="map { @tag: map {
-  'subfields': $subfields, 'ind1': string(@ind1), 'ind2':
-  string(@ind2) } }" /> </xsl:template> </xsl:stylesheet>
+  <xsl:template match="marc:datafield">
+    <xsl:variable name="subfields"
+		  select="array {
+			    for $s in marc:subfield
+			    return map {
+			      $s/@code: $s => string() => normalize-space() } }" />
+
+    <xsl:sequence select="map {
+			    @tag: map {
+			      'subfields': $subfields,
+			      'ind1': @ind1 => string(),
+			      'ind2': @ind2 => string() } }" />
+  </xsl:template>
+</xsl:stylesheet>
